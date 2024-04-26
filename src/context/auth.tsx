@@ -1,43 +1,118 @@
-import { createContext, useContext, useMemo, useState } from 'react'
+import { createContext, useContext, useMemo, useState } from 'react';
+import {
+  createUserWithEmailAndPassword,
+  GoogleAuthProvider,
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signOut,
+} from 'firebase/auth';
 
-import { storage } from '@/utils'
+import { storage } from '@/utils';
 
-type User = { email: string }
+import auth from '../../firebaseConfig';
+
+type User = { email: string };
+
+type UserData = {
+  email: string;
+  password: string;
+};
 
 type AuthContext = {
-  token: string
-  user?: User
-  login: (email: string) => void
-  logout: () => void
-}
+  token: string;
+  user?: User;
+  register: ({ email, password }: UserData) => Promise<void>;
+  signIn: ({ email, password }: UserData) => Promise<void>;
+  signInWithGoogle: () => Promise<void>;
+  resetPassword: (email: string) => Promise<void>;
+  logout: () => Promise<void>;
+};
 
-const AuthContext = createContext<AuthContext | null>(null)
+const AuthContext = createContext<AuthContext | null>(null);
+
+const googleProvider = new GoogleAuthProvider();
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [token, setToken] = useState<string>(() => storage.get('token') || '')
-  const [user, setUser] = useState<AuthContext['user']>(() => storage.get('user') || undefined)
+  const [token, setToken] = useState<string>(() => storage.get('token') || '');
+  const [user, setUser] = useState<AuthContext['user']>(() => storage.get('user') || undefined);
 
   const value = useMemo(
-    () => ({
+    (): AuthContext => ({
       token,
       user,
-      login: (email: string) => {
-        setToken('token'), storage.set('token', 'a0731ae631bc01dea99f13b3f8ed48fc')
-        setUser({ email }), storage.set('user', { email })
+      register: async ({ email, password }) => {
+        if (!email || !password) {
+          console.error('Provide Email and Password');
+          return;
+        }
+        try {
+          const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+          const { uid } = userCredential.user;
+          setToken(uid);
+          storage.set('token', uid);
+          setUser({ email });
+          storage.set('user', { email });
+        } catch (error) {
+          console.error('Error Registering', error);
+        }
       },
-      logout: () => {
-        setToken(''), storage.remove('token')
-        setUser(undefined), storage.remove('user')
+      signIn: async ({ email, password }) => {
+        try {
+          const userCredential = await signInWithEmailAndPassword(auth, email, password);
+          const { uid } = userCredential.user;
+          setToken(uid);
+          storage.set('token', uid);
+          setUser({ email });
+          storage.set('user', { email });
+        } catch (error) {
+          console.error('Error Signing In', error);
+        } finally {
+          setUser({ email });
+          storage.set('user', { email });
+        }
+      },
+      signInWithGoogle: async () => {
+        try {
+          const userCredential = await signInWithPopup(auth, googleProvider);
+          const { uid } = userCredential.user;
+          setToken(uid);
+          storage.set('token', uid);
+          if (userCredential.user.email) {
+            setUser({ email: userCredential.user.email });
+            storage.set('user', { email: userCredential.user.email });
+          }
+        } catch (error) {
+          console.error('Error Signing In With Google', error);
+        }
+      },
+      resetPassword: async (email) => {
+        try {
+          await sendPasswordResetEmail(auth, email);
+        } catch (error) {
+          console.error('Error Resetting Password', error);
+        }
+      },
+      logout: async () => {
+        try {
+          await signOut(auth);
+          setToken('');
+          storage.remove('token');
+          setUser(undefined);
+          storage.remove('user');
+        } catch (error) {
+          console.error('Error Logging Out', error);
+        }
       },
     }),
-    [token, user],
-  )
+    [token, user]
+  );
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
-}
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+};
 
 export const useAuth = (): AuthContext => {
-  const context = useContext(AuthContext)
-  if (!context) throw Error('useAuth should be used within <AuthProvider />')
-  return context
-}
+  const context = useContext(AuthContext);
+  if (!context) throw Error('useAuth should be used within <AuthProvider />');
+  return context;
+};

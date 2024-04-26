@@ -2,6 +2,7 @@ module.exports = {
   parser: '@typescript-eslint/parser',
   parserOptions: { ecmaFeatures: { jsx: true } },
   settings: { react: { version: 'detect' } },
+  env: { browser: true, es6: true, node: true, commonjs: true },
   extends: [
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
@@ -27,4 +28,4 @@ module.exports = {
     },
   ],
   ignorePatterns: ['*rc.js', '*.config.js'],
-}
+};
