@@ -3,7 +3,7 @@ import { Navigate, useLocation } from 'react-router-dom'
 import { useAuth } from '@/context'
 import { Path } from '@/router'
 
-const PRIVATE: Path[] = ['/logout']
+const PRIVATE: Path[] = ['/', '/orders']
 const PUBLIC: Path[] = ['/login']
 
 export const Redirects = ({ children }: { children: JSX.Element }) => {

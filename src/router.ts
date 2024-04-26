@@ -3,21 +3,9 @@
 
 import { components, hooks, utils } from '@generouted/react-router/client'
 
-export type Path =
-  | `/`
-  | `/catch/*`
-  | `/dynamic/:timestamp`
-  | `/login`
-  | `/logout`
-  | `/nested`
-  | `/nested/child`
-  | `/nested/sibling`
-  | `/routing`
+export type Path = `/` | `/login` | `/orders`
 
-export type Params = {
-  '/catch/*': { '*': string }
-  '/dynamic/:timestamp': { timestamp: string }
-}
+export type Params = {}
 
 export type ModalPath = never
 

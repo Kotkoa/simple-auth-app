@@ -9,29 +9,24 @@ import { Link } from '@/router'
 export default function App() {
   const auth = useAuth()
 
+  const logout = () => auth.logout()
+
   return (
     <div className="flex min-h-screen flex-col p-6 text-default">
       <header className="flex items-center justify-between">
-        <nav className="flex items-center gap-4 font-mono">
-          <Link className="p-2 hover:underline" to="/">
-            /home
-          </Link>
-
-          {auth.token ? (
-            <Link className="p-2 hover:underline" to="/logout">
-              /auth
+        {auth.token ? (
+          <nav className="flex items-center gap-4 font-mono">
+            <Link className="p-2 hover:underline" to="/">
+              /home
             </Link>
-          ) : (
-            <Link className="p-2 hover:underline" to="/login">
-              /auth
+            <Link className="p-2 hover:underline" to="/orders">
+              /orders
             </Link>
-          )}
-
-          <Link className="p-2 hover:underline" to="/routing">
-            /routing
-          </Link>
-        </nav>
-
+            <Link className="p-2 hover:underline" to="/login" onClick={logout}>
+              logout
+            </Link>
+          </nav>
+        ) : null}
         {auth.token ? <span className="opacity-50">🔒</span> : null}
       </header>
 

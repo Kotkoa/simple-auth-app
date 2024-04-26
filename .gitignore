@@ -3,6 +3,7 @@ node_modules
 playwright/.cache
 tests/.output
 tests/.report
+.DC_Store
 
 .env
 .env.local
