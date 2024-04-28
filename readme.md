@@ -1,34 +1,32 @@
-<br>
-<p align="center">
-  <a href="https://rendertemplate.vercel.app" target="_blank" rel="noopener noreferrer">
-    <img src="/public/logo.svg" alt="Render · Opinionated React Template" width="120"/>
-  </a>
-</p>
-<p align="center"><em>Opinionated React Template</em></p>
-<br>
+# Simple Authentication App
 
-# Render
+## About
 
-Opinionated React template setup with modern tooling, here some [recommendations](#recommendations) if needed
+This React app is designed to provide a solid foundation for web applications requiring secure authentication. It features built-in support for Google and Microsoft OAuth authentication alongside a standard username and password login system. This template ensures a seamless and secure user experience, maintaining session states even after application restarts.
 
-## Technologies and tools
+## Links and Resources
+
+- **Repository:** [GitHub Repository](https://github.com/Kotkoa/simple-auth-app)
+- **Live Deployment:** [Simple Auth App](#)
+
+## What Can You Do Here?
+
+- **Authenticate:** Log in using Google, Microsoft, or standard username/password combinations.
+- **Navigate:** Access secure pages like the Home and Orders page only after authentication.
+- **Persist:** Enjoy persistent login sessions that resume even after closing and reopening the browser.
+
+## Technologies Behind the Magic
+
+This application leverages:
 
 - [React](https://reactjs.org)
 - [TypeScript](https://www.typescriptlang.org)
 - [React Router](https://reactrouter.com)
 - [Generouted](https://github.com/oedotme/generouted)
 - [TailwindCSS](https://tailwindcss.com)
-- [Playwright](https://playwright.dev)
 - [ESLint](https://eslint.org)
-- [Prettier](https://prettier.io)
 - [Vite](https://vitejs.dev)
-- [PNPM](https://pnpm.io)
-- [Husky](https://typicode.github.io/husky)
-- [Commitlint](https://commitlint.js.org)
-- [Lint-staged](https://github.com/okonet/lint-staged)
 - [Vercel](http://vercel.com)
-
-## Highlights
 
 ### File based routing
 
@@ -40,112 +38,40 @@ Opinionated React template setup with modern tooling, here some [recommendations
 - [Authentication context](./src/context/auth.tsx)
 - [Routes guard](./src/config/redirects.tsx)
 
-### Custom hooks
-
-- [`useQuery` hook](./src/hooks/query.ts)
-
-## Usage
-
-By [generating](https://github.com/oedotme/render/generate) from this template then/or cloning locally
-
 ## Getting started
 
-#### Installation
+### Setup and Installation
 
-```shell
-# install dependencies
-pnpm install
+**Clone the repository:**
 
-# install playwright browsers
-pnpm playwright install --with-deps chromium
+```bash
+git clone https://github.com/your-github-username/your-project-repo
+cd your-project-directory
+npm install
 ```
 
-#### Development and build
+**Set up environment variables:**
+Create a .env file in the root directory and add the following:
 
-```shell
+```bash
+VITE_FIREBASE_API_KEY=""
+VITE_FIREBASE_AUTH_DOMAIN=""
+VITE_FIREBASE_PROJECT_ID=""
+VITE_FIREBASE_STORAGE_BUCKET=""
+VITE_FIREBASE_MESSAGING_SENDER_ID=""
+VITE_FIREBASE_APP_ID=""
+VITE_FIREBASE_DATABASE_URL=""
+```
+
+**Run the application:**
+
+```bash
 # start development server · http://localhost:3000
-pnpm dev
-
-# build client for production
-pnpm build
-
-# start production preview · http://localhost:5000
-pnpm preview
+npm run dev
 ```
 
-#### Testing — end-to-end and unit tests
+Navigate to <http://localhost:3000> on your browser to view the application.
 
-```shell
-# run all tests from the command-line
-pnpm test
+### Deployment
 
-# run end-to-end tests in interactive mode
-pnpm test:ui
-
-# run end-to-end tests in headed browsers
-pnpm test:headed
-
-# run test generator to record an end-to-end test
-pnpm test:record
-```
-
-## Recommendations
-
-#### Frameworks
-
-- [Astro](https://astro.build)
-- [Next.js](https://nextjs.org)
-- [Remix](https://remix.run)
-- [Blitz](https://blitzjs.com)
-- [Redwood](https://redwoodjs.com)
-
-#### Non-React Frameworks
-
-- [Solid](https://www.solidjs.com)
-- [SolidStart](https://start.solidjs.com)
-- [Preact](https://preactjs.com)
-
-#### Languages
-
-- [ReScript](https://rescript-lang.org)
-
-#### Routing
-
-- [TanStack Router](https://tanstack.com/router)
-
-#### Components
-
-- [Radix UI](https://www.radix-ui.com)
-- [Headless UI](https://headlessui.dev)
-- [Chakra UI](https://chakra-ui.com)
-
-#### Build tools
-
-- [Esbuild](https://esbuild.github.io)
-- [Parcel](https://parceljs.org)
-
-#### Server state
-
-- [TanStack Query](https://tanstack.com/query)
-- [SWR](https://swr.vercel.app)
-
-#### Data fetching
-
-- [Ky](https://github.com/sindresorhus/ky)
-- [Redaxios](https://github.com/developit/redaxios)
-- [Axios](https://github.com/axios/axios)
-
-#### Global state
-
-- [Zustand](https://github.com/pmndrs/zustand)
-- [Jotai](https://jotai.org)
-- [Recoil](https://recoiljs.org)
-- [Redux Toolkit](https://redux-toolkit.js.org)
-
-#### Animation
-
-- [Framer Motion](https://www.framer.com/motion)
-
-## License
-
-MIT
+To deploy this project, you can use platforms like Vercel by pushing your code to a linked repository and following their deployment guides.

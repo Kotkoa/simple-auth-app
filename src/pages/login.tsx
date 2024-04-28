@@ -66,9 +66,13 @@ export default function Login() {
           Login
         </Button>
         <p className="message">
-          Not registered? <Link to="/register">Create an account</Link>
+          Not registered?{' '}
+          <Link to="/register" onClick={auth.clearError}>
+            Create an account
+          </Link>
         </p>
       </form>
+      {auth.error && <p className="text-base text-red-600">{auth.error}</p>}
     </>
   );
 }

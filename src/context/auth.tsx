@@ -1,4 +1,5 @@
 import { createContext, useContext, useMemo, useState } from 'react';
+import { FirebaseError } from 'firebase/app';
 import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
@@ -10,6 +11,7 @@ import {
 } from 'firebase/auth';
 
 import { storage } from '@/utils';
+import { translateErrorCode } from '@/utils/translate-error-code';
 
 import auth from '../../firebaseConfig';
 
@@ -23,6 +25,8 @@ type UserData = {
 type AuthContext = {
   token: string;
   user?: User;
+  error?: string;
+  clearError: () => void;
   register: ({ email, password }: UserData) => Promise<void>;
   signIn: ({ email, password }: UserData) => Promise<void>;
   signInWithGoogle: () => Promise<void>;
@@ -39,16 +43,20 @@ const microsoftProvider = new OAuthProvider('microsoft.com');
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [token, setToken] = useState<string>(() => storage.get('token') || '');
   const [user, setUser] = useState<AuthContext['user']>(() => storage.get('user') || undefined);
+  const [authError, setAuthError] = useState<string>('');
 
   const value = useMemo(
     (): AuthContext => ({
       token,
       user,
+      error: authError,
+      clearError: () => setAuthError(''),
       register: async ({ email, password }) => {
         if (!email || !password) {
           console.error('Provide Email and Password');
           return;
         }
+        setAuthError('');
         try {
           const userCredential = await createUserWithEmailAndPassword(auth, email, password);
           const { uid } = userCredential.user;
@@ -57,10 +65,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           setUser({ email });
           storage.set('user', { email });
         } catch (error) {
-          console.error('Error Registering', error);
+          if (error instanceof FirebaseError) {
+            console.error('Error Registering', error.code);
+            setAuthError(translateErrorCode(error.code));
+          }
         }
       },
       signIn: async ({ email, password }) => {
+        setAuthError('');
         try {
           const userCredential = await signInWithEmailAndPassword(auth, email, password);
           const { uid } = userCredential.user;
@@ -69,13 +81,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           setUser({ email });
           storage.set('user', { email });
         } catch (error) {
-          console.error('Error Signing In', error);
+          if (error instanceof FirebaseError) {
+            console.error('Error Signing In', error);
+            setAuthError(translateErrorCode(error.code));
+          }
         } finally {
           setUser({ email });
           storage.set('user', { email });
         }
       },
       signInWithGoogle: async () => {
+        setAuthError('');
         try {
           const userCredential = await signInWithPopup(auth, googleProvider);
           const { uid } = userCredential.user;
@@ -86,15 +102,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             storage.set('user', { email: userCredential.user.email });
           }
         } catch (error) {
-          console.error('Error Signing In With Google', error);
+          if (error instanceof FirebaseError) {
+            console.error('Error Signing In With Google', error);
+            setAuthError(translateErrorCode(error.code));
+          }
         }
       },
       signInWithMicrosoft: async () => {
+        setAuthError('');
         try {
           const userCredential = await signInWithPopup(auth, microsoftProvider);
           const credential = OAuthProvider.credentialFromResult(userCredential);
           if (credential) {
-            // const accessToken = credential.accessToken;
             const idToken = credential.idToken;
             if (idToken) {
               setToken(idToken);
@@ -107,17 +126,25 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             }
           }
         } catch (error) {
-          console.error('Error Signing In With Microsoft', error);
+          if (error instanceof FirebaseError) {
+            console.error('Error Signing In With Microsoft', error);
+            setAuthError(translateErrorCode(error.code));
+          }
         }
       },
       resetPassword: async (email) => {
+        setAuthError('');
         try {
           await sendPasswordResetEmail(auth, email);
         } catch (error) {
-          console.error('Error Resetting Password', error);
+          if (error instanceof FirebaseError) {
+            console.error('Error Resetting Password', error);
+            setAuthError(translateErrorCode(error.code));
+          }
         }
       },
       logout: async () => {
+        setAuthError('');
         try {
           await signOut(auth);
           setToken('');
@@ -125,11 +152,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           setUser(undefined);
           storage.remove('user');
         } catch (error) {
-          console.error('Error Logging Out', error);
+          if (error instanceof FirebaseError) {
+            console.error('Error Logging Out', error);
+            setAuthError(translateErrorCode(error.code));
+          }
         }
       },
     }),
-    [token, user]
+    [token, user, authError]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
