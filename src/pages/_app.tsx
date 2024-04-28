@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
 import '@/styles/layers.css';
 
 import { Outlet } from 'react-router-dom';
@@ -10,7 +9,7 @@ import { Link } from '@/router';
 export default function App() {
   const auth = useAuth();
 
-  const logout = () => auth.logout();
+  const logout = () => void auth.logout();
 
   return (
     <div className="flex min-h-screen flex-col bg-lime-100 p-6 text-default">

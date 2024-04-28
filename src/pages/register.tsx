@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
 import { useState } from 'react';
 
 import { Button } from '@/components';
@@ -15,13 +14,10 @@ export default function Register() {
 
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => setPassword(event.target.value);
 
-  const register = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const register = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    await auth
-      .register({ email, password })
-      .then((user) => user)
-      .catch((error) => console.error('Error of Register', error));
+    void auth.register({ email, password });
   };
 
   return (

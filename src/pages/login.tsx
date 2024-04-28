@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
 import { useState } from 'react';
 
 import { Button } from '@/components';
@@ -15,13 +14,10 @@ export default function Login() {
 
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => setPassword(event.target.value);
 
-  const login = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const login = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    await auth
-      .signIn({ email, password })
-      .then((user) => user)
-      .catch((error) => console.error('Error Logging In', error));
+    void auth.signIn({ email, password });
   };
 
   return (
