@@ -2,6 +2,7 @@ import { createContext, useContext, useMemo, useState } from 'react';
 import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
+  OAuthProvider,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signInWithPopup,
@@ -25,6 +26,7 @@ type AuthContext = {
   register: ({ email, password }: UserData) => Promise<void>;
   signIn: ({ email, password }: UserData) => Promise<void>;
   signInWithGoogle: () => Promise<void>;
+  signInWithMicrosoft: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
   logout: () => Promise<void>;
 };
@@ -32,6 +34,7 @@ type AuthContext = {
 const AuthContext = createContext<AuthContext | null>(null);
 
 const googleProvider = new GoogleAuthProvider();
+const microsoftProvider = new OAuthProvider('microsoft.com');
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [token, setToken] = useState<string>(() => storage.get('token') || '');
@@ -84,6 +87,27 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           }
         } catch (error) {
           console.error('Error Signing In With Google', error);
+        }
+      },
+      signInWithMicrosoft: async () => {
+        try {
+          const userCredential = await signInWithPopup(auth, microsoftProvider);
+          const credential = OAuthProvider.credentialFromResult(userCredential);
+          if (credential) {
+            // const accessToken = credential.accessToken;
+            const idToken = credential.idToken;
+            if (idToken) {
+              setToken(idToken);
+              storage.set('token', idToken);
+            }
+            const email = userCredential.user.email;
+            if (email) {
+              setUser({ email });
+              storage.set('user', { email });
+            }
+          }
+        } catch (error) {
+          console.error('Error Signing In With Microsoft', error);
         }
       },
       resetPassword: async (email) => {
