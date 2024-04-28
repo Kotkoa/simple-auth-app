@@ -7,7 +7,7 @@ This React app is designed to provide a solid foundation for web applications re
 ## Links and Resources
 
 - **Repository:** [GitHub Repository](https://github.com/Kotkoa/simple-auth-app)
-- **Live Deployment:** [Simple Auth App](#)
+- **Live Deployment:** [Simple Auth App](https://simple-auth-app-black.vercel.app/login)
 
 ## What Can You Do Here?
 
@@ -62,6 +62,18 @@ VITE_FIREBASE_MESSAGING_SENDER_ID=""
 VITE_FIREBASE_APP_ID=""
 VITE_FIREBASE_DATABASE_URL=""
 ```
+
+or
+
+To use Google and Microsoft OAuth for authentication, obtain credentials from Firebase:
+
+1. **Navigate to Firebase:**
+   Go to [Firebase Console](https://firebase.google.com/), create a new project, and enable Google and Microsoft under the "Authentication" section.
+
+2. **Obtain Credentials:**
+
+   - Enable each provider, and Firebase will provide the `Client ID` and `Client Secret`.
+   - Store these credentials in your project's `.env` file as an example above.
 
 **Run the application:**
 
