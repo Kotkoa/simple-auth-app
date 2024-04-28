@@ -4,6 +4,9 @@
 
 This React app is designed to provide a solid foundation for web applications requiring secure authentication. It features built-in support for Google and Microsoft OAuth authentication alongside a standard username and password login system. This template ensures a seamless and secure user experience, maintaining session states even after application restarts.
 
+//image
+![Simple Auth App - preview](./public/Screenshot 2024-04-28 at 19.07.11.png)
+
 ## Links and Resources
 
 - **Repository:** [GitHub Repository](https://github.com/Kotkoa/simple-auth-app)
